@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Registered Students</title>
+</head>
+<body>
+	<div align="left">	
+		<a th:href="@{/GoToHomeProfessor}">
+			<button type="submit">Back</button>
+		</a>
+	</div>
+    <div align="right">
+		<a th:href="@{/Logout}">
+			<button type="submit">Logout</button>
+		</a>
+	</div>
+	<div>
+		<span style="display:none" th:style="${hideText}">No registered students found</span>
+	</div>
+	<table style="display:none" th:style="${hideTable}" border=1>
+	    <thead>
+	        <tr>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID}, precField=${precField}, sortField='studentID', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                    StudentID<span style="display:none" th:style="${HTStudentID}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID},precField=${precField}, sortField='surname', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                    Surname<span style="display:none" th:style="${HTSurname}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID},precField=${precField}, sortField='name', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                   	Name<span style="display:none" th:style="${HTName}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID},precField=${precField}, sortField='email', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                   	Email<span style="display:none" th:style="${HTEmail}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID},precField=${precField}, sortField='major', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                   	Major<span style="display:none" th:style="${HTMajor}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID}, precField=${precField},sortField='grade', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                   	Grade<span style="display:none" th:style="${HTGrade}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/GoToRegisteredStudents(examDateID=${edID},precField=${precField}, sortField='status', order=${sortOrder == 'asc' ? 'desc' : 'asc'})}">
+                   	Evaluation Status<span style="display:none" th:style="${HTStatus}" th:text="${sortOrder == 'asc' ? '↑' : '↓'}"></span>
+                </a>
+            </th>
+        </tr>
+	    </thead>
+	    <tbody>
+	        <tr th:each="e : ${students}">
+			    <td th:text="${e.student.studentID}"></td>
+			    <td th:text="${e.student.surname}"></td>
+			    <td th:text="${e.student.name}"></td>
+			    <td th:text="${e.student.email}"></td>
+			    <td th:text="${e.student.major}"></td>
+			    <td th:text="${e.gradeStatus.grade == -4? 'None' :
+			    		           (e.gradeStatus.grade == -3? 'Failed(Deferred)' :
+			    			   	       (e.gradeStatus.grade == -2? 'Failed' :
+			    			   	           (e.gradeStatus.grade == -1? 'Absent' : 
+			    			   	               (e.gradeStatus.grade == 31? '30 cum laude' : e.gradeStatus.grade))))}"></td>
+			    <td th:text="${e.gradeStatus.status}"></td>
+			    <td th:if="${e.gradeStatus.status != 'published'} and ${e.gradeStatus.status != 'refused'} and ${e.gradeStatus.status != 'recorded'}">
+			        <a th:href="@{/GoToGradeForm(examDateID=${edID}, studentID=${e.student.studentID})}">
+			            <button type="submit">MODIFY</button>
+			        </a>
+			    </td>
+			</tr>
+	    </tbody>
+	</table>
+	<div th:if="${not #lists.isEmpty(students)}">
+	    <a th:href="@{/PublishGrades(examDateID=${edID})}">
+	        <button type="submit">PUBLISH</button>
+	    </a>
+	    <a th:href="@{/RecordGrades(examDateID=${edID})}">
+	        <button type="submit">RECORD</button>
+	    </a>
+	</div>
+</body>
+</html>
