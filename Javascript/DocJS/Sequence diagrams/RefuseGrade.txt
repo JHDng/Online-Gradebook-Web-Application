@@ -1,0 +1,24 @@
+title Event: RefuseGrade
+
+participant Request
+participant RefuseGrade
+participant ExamDateDAO
+participant Response
+
+Request->RefuseGrade: doPost(examDateID_str)
+
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    RefuseGrade->Response: setStatus(400)
+    RefuseGrade->Response: println("Invalid exam date id")
+end
+alt
+RefuseGrade->ExamDateDAO: refuseGrade(studentID, examDateID)
+
+alt SQLException
+    RefuseGrade->Response: setStatus(500)
+    RefuseGrade->Response: println("Error in refusing grade")
+else
+    RefuseGrade->Response: setStatus(200)
+end
+end

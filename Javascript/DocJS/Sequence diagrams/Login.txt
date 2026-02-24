@@ -1,0 +1,29 @@
+title Event: Login
+
+participant Request
+participant Login
+participant UserDAO
+participant Response
+
+Request->Login: doPost(username, password)
+
+alt !SafeChecker.isStringSafe(username) || !SafeChecker.isStringSafe(password)
+    Login->Response: setStatus(400)
+    Login->Response: println("Incorrect fields or maximum length reached(127)")
+else
+    Login->UserDAO: checkCredentials(username, password)
+    UserDAO-->Login: user
+
+    alt user == null
+        Login->Response: setStatus(401)
+        Login->Response: println("Incorrect credentials")
+    else
+        Login->Request: getSession().setAttribute("user", user)
+        Login->Response: setStatus(200)
+        Login->Response: println(json)
+    end
+    else  SQLException
+    Login->Response: setStatus(500)
+    Login->Response: println("Error in credentials checking")
+end
+

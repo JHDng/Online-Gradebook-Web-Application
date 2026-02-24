@@ -1,0 +1,28 @@
+title Event: GetRegisteredStudents
+
+participant Request
+participant GetRegisteredStudents
+participant StudentDAO
+participant Response
+
+Request->GetRegisteredStudents: doGet(examDateID)
+
+alt !SafeChecker.isStringSafe
+    GetRegisteredStudents->Response: setStatus(400)
+    GetRegisteredStudents->Response: println("Invalid exam date id")
+else
+    GetRegisteredStudents->StudentDAO: findStudentsGradesByExamDateID(examDateID)
+    StudentDAO-->GetRegisteredStudents: sr
+
+    alt sr == null || sr.isEmpty
+        GetRegisteredStudents->Response: setStatus(404)
+        GetRegisteredStudents->Response: println("No registered students found")
+    else
+        GetRegisteredStudents->Response: setStatus(200)
+        GetRegisteredStudents->Response: write(json)
+    
+    else SQLException
+        GetRegisteredStudents->Response: setStatus(500)
+        GetRegisteredStudents->Response: println("Error in finding registered students")
+end
+end

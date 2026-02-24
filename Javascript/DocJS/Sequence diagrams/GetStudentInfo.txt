@@ -1,0 +1,44 @@
+title Event: GetStudentInfo
+
+participant Request
+participant GetStudentInfo
+participant SafeChecker
+participant StudentDAO
+participant Response
+
+Request->GetStudentInfo: doGet(examDateID, studentID)
+
+alt !SafeChecker.isStringSafe(studentID_str)
+    GetStudentInfo->Response: setStatus(400)
+    GetStudentInfo->Response: println("Invalid student id")
+else
+    alt studentID_str parse error
+        GetStudentInfo->Response: setStatus(400)
+        GetStudentInfo->Response: println("Invalid student id format")
+    else
+        alt !SafeChecker.isStringSafe(examDateID_str)
+            GetStudentInfo->Response: setStatus(400)
+            GetStudentInfo->Response: println("Invalid exam date id")
+        else
+            alt 
+                GetStudentInfo->StudentDAO: findStudentByStudIDExamDateID(studentID, examDateID)
+                StudentDAO-->GetStudentInfo: Student s
+
+                alt s == null
+                    GetStudentInfo->Response: setStatus(404)
+                    GetStudentInfo->Response: println("No student found in such exam date")
+                else
+                    GetStudentInfo->Response: setStatus(200)
+                    GetStudentInfo->Response: println(json)
+                end
+                else SQLException
+GetStudentInfo->Response: setStatus(500)
+GetStudentInfo->Response: println("Error in finding student by id")
+            end
+            
+        end
+    end
+    
+end
+
+

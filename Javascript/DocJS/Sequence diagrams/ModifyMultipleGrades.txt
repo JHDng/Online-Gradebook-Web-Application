@@ -1,0 +1,69 @@
+title Event: ModifyMultipleGrades
+
+participant Request
+participant ModifyMultipleGrades
+participant SafeChecker
+
+participant StudentDAO
+participant ExamDateDAO
+participant Student
+participant Response
+
+Request->ModifyMultipleGrades: doPost(students to grade map)
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    ModifyMultipleGrades->Response: setStatus(400)
+    ModifyMultipleGrades->Response: println("Invalid exam date id")
+end
+
+loop for each (studentID_str, grade_str) in map
+    alt !SafeChecker.isStringSafe(studentID_str) or studentID_str.length != 6
+        ModifyMultipleGrades->Response: setStatus(400)
+        ModifyMultipleGrades->Response: println("Invalid student id")
+
+    end
+
+    alt parse fails
+        ModifyMultipleGrades->Response: setStatus(400)
+        ModifyMultipleGrades->Response: println("Invalid student id format")
+
+    end
+
+    alt !SafeChecker.isStringSafe(grade_str)
+        ModifyMultipleGrades->Response: setStatus(400)
+        ModifyMultipleGrades->Response: println("Invalid grade string format")
+
+    end
+
+
+    alt parse fails
+        ModifyMultipleGrades->Response: setStatus(400)
+        ModifyMultipleGrades->Response: println("Invalid grade format")
+    end
+
+    alt 
+        alt !validGradesList.contains(grade)
+            ModifyMultipleGrades->Response: setStatus(400)
+            ModifyMultipleGrades->Response: println("Invalid grade present")
+            return
+        end
+
+        ModifyMultipleGrades->StudentDAO: findStudentByStudIDExamDateID(studentID, examDateID)
+        StudentDAO->ModifyMultipleGrades: Student s
+
+        alt s == null
+            ModifyMultipleGrades->Response: setStatus(404)
+            ModifyMultipleGrades->Response: println("No student found in such exam date")
+            return
+        end
+    end
+end
+
+ModifyMultipleGrades->ExamDateDAO: modifyMultipleGrades(parametersMap, examDateID)
+ExamDateDAO->ModifyMultipleGrades: int ret
+
+alt ret == 0
+    ModifyMultipleGrades->Response: setStatus(400)
+    ModifyMultipleGrades->Response: println("Couldn't modify grades")
+    return
+end

@@ -1,0 +1,30 @@
+title Event: GetGradableStudents
+
+participant Request
+participant GetGradableStudents
+participant StudentDAO
+participant Response
+
+Request->GetGradableStudents: doGet(examDateID)
+
+alt !SafeChecker.isStringSafe
+    GetGradableStudents->Response: setStatus(400)
+    GetGradableStudents->Response: println("Invalid exam date id or format")
+else
+    GetGradableStudents->StudentDAO: findStudentsGradesByExamDateID(examDateID)
+    StudentDAO-->GetGradableStudents: srList
+
+    alt srList == null || empty
+        GetGradableStudents->Response: setStatus(404)
+        GetGradableStudents->Response: println("No registered students found")
+    else
+        GetGradableStudents->GetGradableStudents: filter "not inserted"
+        GetGradableStudents->Response: setStatus(200)
+        GetGradableStudents->Response: println(filteredList)
+    end
+    else SQLException
+    GetGradableStudents->Response: setStatus(500)
+    GetGradableStudents->Response: println("Error in finding registered students")
+end
+
+

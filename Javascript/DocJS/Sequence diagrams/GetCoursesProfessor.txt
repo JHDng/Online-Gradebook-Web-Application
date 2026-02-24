@@ -1,0 +1,26 @@
+title Event: GetCoursesProfessor
+
+participant Request
+participant GetCoursesProfessor
+participant CourseDAO
+participant Response
+
+Request->GetCoursesProfessor: doGet()
+
+GetCoursesProfessor->CourseDAO: findCoursesByProfessorUUID(user.userUUID)
+CourseDAO-->GetCoursesProfessor: courses || null
+
+alt courses == null || courses.isEmpty
+    GetCoursesProfessor->Response: setStatus(404)
+    GetCoursesProfessor->Response: println("No courses found")
+else
+   GetCoursesProfessor->Response: setStatus(200)
+
+    GetCoursesProfessor->Response: write(json)
+
+else SQLException
+GetCoursesProfessor->Response: setStatus(500)
+GetCoursesProfessor->Response: println("Error in finding courses")
+
+
+end

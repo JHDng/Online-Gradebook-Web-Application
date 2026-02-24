@@ -1,0 +1,22 @@
+title Event: PublishGrades
+
+participant Request
+participant PublishGrades
+participant SafeChecker
+participant ExamDateDAO
+participant Response
+
+Request->PublishGrades: doPost(examDateID_str)
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    PublishGrades->Response: setStatus(400)
+    PublishGrades->Response: println("Invalid exam date id")
+end
+
+
+alt
+PublishGrades->ExamDateDAO: publishGrades(examDateID)
+ else SQLException thrown
+    PublishGrades->Response: setStatus(500)
+    PublishGrades->Response: println("Error publishing grades")
+end

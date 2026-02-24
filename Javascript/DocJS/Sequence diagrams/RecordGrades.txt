@@ -1,0 +1,27 @@
+title Event: RecordGrades
+
+participant Request
+participant RecordGrades
+participant SafeChecker
+
+participant User
+participant ExamDateDAO
+participant Response
+
+Request->RecordGrades: doPost(examDateID_str)
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    RecordGrades->Response: setStatus(400)
+    RecordGrades->Response: println("Invalid exam date id")
+end
+
+RecordGrades->ExamDateDAO: recordGradesStart(userUUID, examDateID)
+ExamDateDAO->RecordGrades: int recordID
+
+alt recordID == -1
+    RecordGrades->Response: setStatus(404)
+    RecordGrades->Response: println("No recordable grades found or record process interrupted")
+else
+    RecordGrades->Response: setStatus(200)
+    RecordGrades->Response: println(recordID)
+end

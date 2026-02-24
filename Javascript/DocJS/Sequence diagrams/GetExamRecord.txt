@@ -1,0 +1,35 @@
+title Event: GetExamRecord
+
+participant Request
+participant GetExamRecord
+participant ExamRecordDAO
+participant Response
+
+Request->GetExamRecord: doGet(recordID)
+
+alt !SafeChecker.isStringSafe
+    GetExamRecord->Response: setStatus(400)
+    GetExamRecord->Response: println("Invalid record id or format")
+else
+    GetExamRecord->ExamRecordDAO: findRecordbyRecordID(recordID, userUUID)
+    ExamRecordDAO-->GetExamRecord: er
+
+    alt er == null
+        GetExamRecord->Response: setStatus(404)
+        GetExamRecord->Response: println("No exam record with that id")
+    else
+        GetExamRecord->ExamRecordDAO: findStudentsByRecordID(recordID)
+        ExamRecordDAO-->GetExamRecord: srList
+
+        alt srList == null || srList.isEmpty
+            GetExamRecord->Response: setStatus(404)
+            GetExamRecord->Response: println("No students found in this record")
+        else
+            GetExamRecord->Response: setStatus(200)
+            GetExamRecord->Response: println(json)
+        end
+else  SQLException
+    GetExamRecord->Response: setStatus(500)
+    GetExamRecord->Response: println("Error in finding record by id")
+    end
+end

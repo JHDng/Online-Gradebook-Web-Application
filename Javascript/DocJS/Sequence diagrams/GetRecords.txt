@@ -1,0 +1,26 @@
+title Event: GetRecords
+
+participant Request
+participant GetRecords
+participant ExamRecordDAO
+participant Response
+
+Request->GetRecords: doGet()
+
+alt 
+GetRecords->ExamRecordDAO: findExamRecordsByProfessorUUID(professorUUID)
+ExamRecordDAO-->GetRecords: erList
+
+alt erList == null || empty
+    GetRecords->Response: setStatus(404)
+    GetRecords->Response: println("No records found")
+else
+
+    GetRecords->Response: setStatus(200)
+    GetRecords->Response: write(json)
+end
+
+else SQLException
+    GetRecords->Response: setStatus(500)
+    GetRecords->Response: println("Error in finding records")
+end

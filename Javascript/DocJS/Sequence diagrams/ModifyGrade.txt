@@ -1,0 +1,44 @@
+title Event: ModifyGrade
+
+participant Request
+participant ModifyGrade
+participant SafeChecker
+
+participant StudentDAO
+participant ExamDateDAO
+participant Student
+participant Response
+
+Request->ModifyGrade: doPost(examDateID_str, studentID_str, grade_str)
+
+alt !SafeChecker.isStringSafe(studentID_str) or studentID_str.length != 6
+    ModifyGrade->Response: setStatus(400)
+    ModifyGrade->Response: println("Invalid student id")
+end
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    ModifyGrade->Response: setStatus(400)
+    ModifyGrade->Response: println("Invalid exam date id")
+end
+
+alt !SafeChecker.isStringSafe(grade_str)
+    ModifyGrade->Response: setStatus(400)
+    ModifyGrade->Response: println("Invalid grade")
+end
+
+ModifyGrade->StudentDAO: findStudentByStudIDExamDateID(studentID, examDateID)
+StudentDAO->ModifyGrade: Student s
+
+alt s == null
+    ModifyGrade->Response: setStatus(404)
+    ModifyGrade->Response: println("No student found in such exam date")
+else
+    ModifyGrade->ExamDateDAO: modifyGrade(studentID, examDateID, grade)
+    ExamDateDAO->ModifyGrade: int ret
+
+    alt ret == 0
+        ModifyGrade->Response: setStatus(400)
+        ModifyGrade->Response: println("Couldn't modify grade")
+        return
+    end
+end

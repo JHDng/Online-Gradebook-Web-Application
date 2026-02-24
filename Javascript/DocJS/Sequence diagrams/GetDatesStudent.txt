@@ -1,0 +1,22 @@
+title Event: GetDatesStudent
+
+participant Request
+participant GetDatesStudent
+participant ExamDateDAO
+participant Response
+
+Request->GetDatesStudent: doGet(courseID)
+
+GetDatesStudent->ExamDateDAO: findRegisteredDatesByStudentID(studentID, courseID)
+ExamDateDAO-->GetDatesStudent: dates || null
+
+alt dates == null || dates.isEmpty
+    GetDatesStudent->Response: setStatus(404)
+    GetDatesStudent->Response: println("No dates found")
+else
+    GetDatesStudent->Response: setStatus(200)
+    GetDatesStudent->Response: println(json)
+else SQLException
+    GetDatesStudent->Response: setStatus(500)
+    GetDatesStudent->Response: println("Error in finding courses")
+end

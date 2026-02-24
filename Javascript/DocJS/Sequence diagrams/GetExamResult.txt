@@ -1,0 +1,32 @@
+title Event: GetExamResult
+
+participant Request
+participant GetExamResult
+participant ExamDateDAO
+participant Response
+
+Request->GetExamResult: doGet(examDateID)
+
+alt !SafeChecker.isStringSafe || !parseable
+    GetExamResult->Response: setStatus(400)
+    GetExamResult->Response: println("Invalid exam date id or format")
+else
+    GetExamResult->ExamDateDAO: findExamResultByStudIDExamDateID(studentID, examDateID)
+    ExamDateDAO-->GetExamResult: examResult || null
+
+    alt examResult == null
+        GetExamResult->Response: setStatus(404)
+        GetExamResult->Response: println("Couldn't find exam date")
+    else
+        alt status == "inserted" || "not inserted"
+            GetExamResult->Response: setStatus(200)
+            GetExamResult->Response: println("not published")
+        else
+            GetExamResult->Response: setStatus(200)
+            GetExamResult->Response: println(json)
+        end
+        else SQLException
+    GetExamResult->Response: setStatus(500)
+    GetExamResult->Response: println("Error in finding student grades")
+    end
+end

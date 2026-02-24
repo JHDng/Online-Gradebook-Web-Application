@@ -1,0 +1,22 @@
+title Event: GetCoursesStudent
+
+participant Request
+participant GetCoursesStudent
+participant CourseDAO
+participant Response
+
+Request->GetCoursesStudent: doGet()
+
+GetCoursesStudent->CourseDAO: findCoursesByStudentID(studentID)
+CourseDAO-->GetCoursesStudent: courses || null
+
+alt courses == null || courses.isEmpty
+    GetCoursesStudent->Response: setStatus(404)
+    GetCoursesStudent->Response: println("No courses found")
+else
+    GetCoursesStudent->Response: setStatus(200)
+    GetCoursesStudent->Response: write(json)
+else SQLException
+    GetCoursesStudent->Response: setStatus(500)
+    GetCoursesStudent->Response: println("Error in finding users")
+end
