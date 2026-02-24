@@ -1,0 +1,24 @@
+title Event: PublishGrades
+
+participant Request
+participant PublishGrades
+participant ExamDateDAO
+participant GoToRegisteredStudents
+participant Response
+
+Request->PublishGrades: doPost(examDateID)
+
+alt !isStringSafe(examDateID_str)
+    PublishGrades->Response: sendError("Invalid exam date id")
+end
+
+alt examDateID_str is not a number
+    PublishGrades->Response: sendError("Invalid exam date id format")
+end
+
+PublishGrades->ExamDateDAO: publishGrades(examDateID)
+alt SQLException
+    PublishGrades->Response: sendError("Error publishing grades")
+else
+    PublishGrades->GoToRegisteredStudents: response.sendRedirect
+end

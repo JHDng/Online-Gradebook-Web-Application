@@ -1,0 +1,37 @@
+title Event: GoToHomeProfessor
+
+participant Request
+participant GoToHomeProfessor
+participant Session
+participant CourseDAO
+participant ExamDateDAO
+participant ctx
+participant homeProfessor.html
+participant Response
+
+Request->GoToHomeProfessor: doGet(courseID)
+
+GoToHomeProfessor->Session: getAttribute("user")
+GoToHomeProfessor->CourseDAO: findCoursesByProfessorUUID(professorUUID)
+CourseDAO->GoToHomeProfessor: courses || null
+
+alt courses == null || courses.isEmpty()
+    GoToHomeProfessor->ctx: setVariable("hiddenTextCourse", "hiddenTextDate", "hiddenTextName", "Identifier")
+    GoToHomeProfessor->homeProfessor.html: templateEngine.process(path, ctx, response.getWriter())
+else
+    alt !SafeChecker.isStringSafe(courseID_str)
+        GoToHomeProfessor->Response: sendError("Invalid exam date id")
+    end
+
+    GoToHomeProfessor->ExamDateDAO: findDatesByCourseID(courseID)
+    ExamDateDAO->GoToHomeProfessor: dates || null
+
+    alt dates == null || dates.isEmpty()
+        GoToHomeProfessor->ctx: setVariable("hiddenTextDate", "hiddenTextName", "Identifier")
+    else
+        GoToHomeProfessor->ctx: setVariable("dates", "hiddenTextDate", "hiddenTextName", "Identifier")
+    end
+
+   GoToHomeProfessor->ctx: setVariable("courses"","hiddenTextCourse")
+    GoToHomeProfessor->homeProfessor.html: templateEngine.process(path, ctx, response.getWriter())
+end

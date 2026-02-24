@@ -1,0 +1,17 @@
+title Event: Login
+
+participant Request
+participant Login
+participant UserDAO
+participant login.html
+participant Session
+participant GoToHomeProfessor
+participant GoToHomeStudent
+
+Request->Login: Do Post (username, password)
+Login->UserDAO: checkCredentials
+UserDAO->Login: user || null
+Login->login.html: [user == null] templateEngine.process
+Login->Session: [user != null] setAttribute("user", user)
+Login->GoToHomeProfessor: [user.getUserType().equals("student") == False] sendRedirect
+Login->GoToHomeStudent: [user.getUserType().equals("student") == True] sendRedirect
