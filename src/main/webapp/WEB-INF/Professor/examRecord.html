@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Record</title>
+</head>
+<body>
+    <h1>Exam Record</h1>
+
+    <section>
+        <p><strong>Record ID:</strong> <span th:text="${record.recordID}"></span></p>
+        <p><strong>Creation Date:</strong> <span th:text="${record.creationDate}"></span></p>
+        <p><strong>Creation Time:</strong> <span th:text="${record.creationTime}"></span></p>
+    </section>
+
+    <section>
+        <h2>Exam Information</h2>
+        <p><strong>Course:</strong> <span th:text="${record.course.name} + ' (' + ${record.course.courseID} +')'"></span></p>
+        <p><strong>Exam Date:</strong> <span th:text="${record.examDate.date}"></span></p>
+    </section>
+
+    <section>
+        <h2>Recorded Students</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Major</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sr : ${studentRegistrations}">
+                    <td th:text="${sr.student.studentID}"></td>
+                    <td th:text="${sr.student.major}"></td>
+                    <td th:text="${sr.student.name}"></td>
+                    <td th:text="${sr.student.surname}"></td>
+                    <td th:text="${sr.gradeStatus.grade == -4? 'None' :
+			    		           (sr.gradeStatus.grade == -3? 'Failed(Deferred)' :
+			    			   	       (sr.gradeStatus.grade == -2? 'Failed' :
+			    			   	           (sr.gradeStatus.grade == -1? 'Absent' : 
+			    			   	               (sr.gradeStatus.grade == 31? '30 cum laude' : sr.gradeStatus.grade))))}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+	<a th:href="@{/GoToRecords}">		
+		<button type="submit">BACK TO RECORDS</button>
+	</a>
+    <a th:href="@{/GoToHomeProfessor}">
+		<button type="submit">BACK TO HOME</button>
+	</a>
+</body>
+</html>
