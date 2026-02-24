@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home Professor</title>
+    <script src="utils.js" charset="utf-8" defer></script>
+    <script src="professorMain.js" charset="utf-8" defer></script>
+</head>
+<body>
+    
+    <div align="right">
+		<a href="Logout">
+			<button type="button">LOGOUT</button>
+		</a>
+	</div>
+	
+	<div>
+		<button id="id_recordsHome">RECORDS</button>
+	</div>
+	
+	<div id="id_homePage">
+		<h1 id="id_welcomeHeader">Welcome back, <span id="id_username"></span> !</h1>
+		<div id="id_courses">
+			<h2>Select a course:</h2>
+			<ol id="id_coursesList"></ol>
+		</div>
+		
+		<div id="id_dates">
+			<ol id="id_datesList"></ol>
+		</div>
+	</div>
+	
+	<div id="id_registeredStudentsPage">
+	
+		<table id="id_studentsTable" border="1">
+		    <thead>
+		        <tr>
+		            <th><a href="#" class="sortable">StudentID</a></th>
+		            <th><a href="#" class="sortable">Surname</a></th>
+		            <th><a href="#" class="sortable">Name</a></th>
+		            <th><a href="#" class="sortable">Email</a></th>
+		            <th><a href="#" class="sortable">Major</a></th>
+		            <th><a href="#" class="sortable">Grade</a></th>
+		            <th><a href="#" class="sortable">Evaluation Status</a></th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <!-- Rows will be injected here -->
+		    </tbody>
+		</table>
+	
+		<div id="id_buttonsRSP">
+		    <button type="button" id="id_publishButton">PUBLISH</button>
+		    <button type="button" id="id_recordButton">RECORD</button>
+		    <button type="button" id="id_multipleModificationButton">MULTIPLE MODIFICATIONS</button>
+		    <button type="button" id="id_backButton">BACK TO HOMEPAGE</button>
+		</div>
+	</div>
+	
+	<div id="id_modalPage">
+		<form id="id_modalForm">
+			<table id="id_studentsTableModal" border="1">
+			    <thead>
+			        <tr>
+			            <th>StudentID</th>
+			            <th>Surname</th>
+			            <th>Name</th>
+			            <th>Email</th>
+			            <th>Major</th>
+			            <th>Grade</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <!-- Rows will be injected here -->
+			    </tbody>
+			</table>
+			
+			<div>
+			    <input type="button" id="id_sendMultipleGrades" value="SAVE">
+			</div>
+		
+		</form>
+	
+		<div id="id_buttonsModal">
+		    <button type="button" id="id_backToRegStudButton">BACK</button>
+		</div>
+		
+	</div>
+	
+	<div id="id_examRecordPage">
+	    <section id="id_recordDetailsSection">
+			<h1>Exam Record</h1>
+	        <p><strong>Record ID:</strong> <span id="id_recordID"></span></p>
+	        <p><strong>Creation Date:</strong> <span id="id_recordCreationDate"></span></p>
+	        <p><strong>Creation Time:</strong> <span id="id_recordCreationTime"></span></p>
+	    </section>
+	
+	    <section id="id_examInfoSection">
+	        <h2>Exam Information</h2>
+	        <p><strong>Course:</strong> <span id="id_recordCourseName"></span></p>
+	        <p><strong>Exam Date:</strong> <span id="id_recordExamDate"></span></p>
+	    </section>
+	
+	    <section id="id_studentInfoSection">
+	        <table border="1">
+	            <thead>
+	                <tr>
+	                    <th>Student ID</th>
+	                    <th>Major</th>
+	                    <th>First Name</th>
+	                    <th>Last Name</th>
+	                    <th>Grade</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <!-- Rows will be injected here -->
+	            </tbody>
+	        </table>
+	    </section>
+	
+	    <div id="id_buttonsERP">
+	        <button type="button" id="id_goToRecordsButton">GO TO RECORDS</button>
+	        <button type="button" id="id_backToHomeButton">BACK TO HOME</button>
+	    </div>
+	</div>
+	
+	<div id="id_gradeFormPage">
+	
+		<div id="id_studentInfoGF">
+            <p><strong>StudentID:</strong> <span id="id_studentIDGF"></span></p>
+            <p><strong>Surname:</strong> <span id="id_surnameGF"></span></p>
+            <p><strong>Name:</strong> <span id="id_nameGF"></span></p>
+            <p><strong>Email:</strong> <span id="id_emailGF"></span></p>
+            <p><strong>Major:</strong> <span id="id_majorGF"></span></p>
+        </div>	
+		
+        <form id="id_gradeForm">
+            <div>
+                <label for="grade">Select grade:</label>
+                <select id="id_gradeSelection" name="grade">
+                    <option value="-1">Absent</option>
+                    <option value="-2">Failed</option>
+                    <option value="-3">Failed(Deferred)</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">30 cum laude</option>
+                </select>
+            </div>
+            
+            <input type="hidden" name="studentID" id="id_studentIDInput">
+			<input type="hidden" name="examDateID" id="id_examDateIDInput">
+
+			<div>
+	           <input type="button" id="id_sendFormButton" value="SAVE">
+			</div>
+        </form>
+        
+        <div>
+        	<input type="button" id="id_buttonGF" value="BACK">
+        </div>
+	</div>
+	
+	<div id="id_recordsPage">
+		<table id="id_recordsTable" border="1">
+	        <thead>
+	            <tr>
+	                <th>Course Name</th>
+	                <th>Exam Date</th>
+	                <th>Record ID</th>
+	                <th>Creation Date</th>
+	                <th>Creation Time</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <!-- Rows will be injected here -->
+	        </tbody>
+	    </table>
+	
+	    <div>
+            <button id="id_buttonRP">BACK</button>
+	    </div>
+	</div>
+	
+	<div align="center" >
+		<span id="id_errorText" style="display:none">Error Text</span>
+	</div>
+	
+</body>
+</html>

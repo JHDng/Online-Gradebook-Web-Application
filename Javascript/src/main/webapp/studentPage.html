@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="utils.js" charset="utf-8" defer></script>
+<script src="studentMain.js" charset="utf-8" defer></script>
+</head>
+<body>
+
+	<div align="right">
+		<a href="Logout">
+			<button type="button">LOGOUT</button>
+		</a>
+	</div>
+	
+	<div id="id_homePage">
+		<h1 id="id_welcomeHeader">Welcome back, <span id="id_username"></span> !</h1>
+		<div id="id_courses">
+			<h2>Select a course:</h2>
+			<ol id="id_coursesList"></ol>
+		</div>
+		
+		<div id="id_dates">
+			<ol id="id_datesList"></ol>
+		</div>
+	</div>
+	
+	<div>
+	    <div id="id_examResult" draggable="true">
+	        <p><strong>Student info:</strong></p>
+	        <p><span>Name:</span> <span id="id_studentName"></span></p>
+	        <p><span>Surname:</span> <span id="id_studentSurname"></span></p>
+	        <p><span>StudentID:</span> <span id="id_studentID"></span></p>
+	        <p><span>Major:</span> <span id="id_studentMajor"></span></p>
+	
+	        <p><strong>Exam info:</strong></p>
+	        <p><span>Course:</span> <span id="id_courseName"></span> (<span id="id_courseID"></span>)</p>
+	        <p><span>Exam date:</span> <span id="id_examDate"></span></p>
+	        <p><span>Grade:</span> <span id="id_examGrade"></span></p>
+	
+	    </div>
+	    
+        <div>
+			  <img id="id_trashIcon" src="bin.png" alt="Trash Icon Image" width="50" height="50">
+		</div>
+	    
+	    <div>
+	        <button type="button" id="id_backToHomeButton">BACK TO HOMEPAGE</button>
+	    </div>
+	</div>
+    
+    <div id="id_popupButtons">
+    	<button type="button" id="id_cancelButton">CANCEL</button>
+    	<button type="button" id="id_confirmButton">CONFIRM</button>
+    </div>
+    
+    <div align="center" >
+		<span id="id_errorText" style="display:none">Error Text</span>
+	</div>
+</body>
+</html>

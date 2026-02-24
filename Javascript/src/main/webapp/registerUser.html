@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Registration Form</title>
+</head>
+<body>
+	<h2>Registration Form</h2>
+	<form action="/ProgettoTIW/RegisterUser" method ="POST">
+    	<!-- using "required" doesn't actually solve the empty field problem -->
+    	<!-- "required" only improved the user experience -->
+	    <input type="text" name="username" id="1" placeholder="Username" maxlength=127 required /><br>
+
+	    <input type="password" name="password" id="2" placeholder="Password" maxlength=127 required /><br>
+	    
+	    <input type="text" name="name" id="3" placeholder="Name" maxlength=127 required /><br>
+	    
+	    <input type="text" name="surname" id="4" placeholder="Surname" maxlength=127 required /><br>
+	
+		<input type="email" name="email" id="5" placeholder="Email" maxlength=127 required /><br>
+		
+		<p>Select user type:</p>
+		
+		<label>
+			<input type="radio" name="userType" id="6" value="student">
+			Student
+		</label><br>
+			
+		<label>
+			<input type="radio" name="userType" id="6" value="professor">
+			Professor
+		</label><br>
+			
+		<p>Major and studentID (only for students):</p>
+		
+		<label>
+		  <input type="radio" name="major" id="7" value="computer">
+		  Computer Engineering
+		</label><br>
+		
+		<label>
+		  <input type="radio" name="major" id="8" value="mechanical">
+		  Mechanical Engineering
+		</label><br>
+		
+		<label>
+		  <input type="radio" name="major" id="9" value="civil">
+		  Civil Engineering
+		</label><br>
+		
+		<label>
+		  <input type="radio" name="major" id="9" value="electrical">
+		  Electrical Engineering
+		</label><br><br>
+		
+		<input type="text" name="studentID" id="10" placeholder="StudentID" pattern="^\d{6}$" title="Please enter exactly 6 numbers." maxlength=127 /><br>
+		
+	    <button type="submit">Register</button><br>
+    </form>
+    <a href="http://localhost:8080/ProgettoTIW/login.html">Login</a><br>
+</body>
+</html>
