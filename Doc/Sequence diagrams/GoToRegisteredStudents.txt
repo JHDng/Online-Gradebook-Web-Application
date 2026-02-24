@@ -1,0 +1,25 @@
+title Event: GoToRegisteredStudents
+
+participant Request
+participant GoToRegisteredStudents
+participant StudentDAO
+participant ctx
+participant registeredStudents.html
+participant Response
+
+Request->GoToRegisteredStudents: doGet("examDateID", "precField", "sortField", "order")
+
+alt !SafeChecker.isStringSafe(examDateID_str)
+    GoToRegisteredStudents->Response: sendError(400, "Invalid exam date id")
+else
+    GoToRegisteredStudents->StudentDAO: findStudentsGradesByExamDateID(examDateID)
+    StudentDAO->GoToRegisteredStudents: studentRegistrationList
+    
+    alt list empty or null
+        GoToRegisteredStudents->ctx: setVariable("hideTable","hideText")
+        GoToRegisteredStudents->registeredStudents.html: templateEngine.process()
+    else
+        GoToRegisteredStudents->ctx: setVariable("students","hideTable","hideText","edID","sortOrder","precField")
+        GoToRegisteredStudents->registeredStudents.html: templateEngine.process()
+    end
+end

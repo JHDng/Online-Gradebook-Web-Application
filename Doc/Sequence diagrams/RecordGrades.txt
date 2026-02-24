@@ -1,0 +1,26 @@
+title Event: RecordGrades
+
+participant Request
+participant RecordGrades
+participant ExamDateDAO
+participant GoToExamRecord
+participant Response
+
+Request->RecordGrades: doPost(examDateID)
+
+alt !isStringSafe(examDateID_str)
+    RecordGrades->Response: sendError("Invalid exam date id")
+end
+
+alt examDateID_str is not a number
+    RecordGrades->Response: sendError("Invalid exam date id format")
+end
+
+RecordGrades->ExamDateDAO: recordGradesStart(userUUID, examDateID)
+ExamDateDAO->RecordGrades: recordID
+
+alt recordID == -1
+    RecordGrades->Response: sendError("No recordable grades found or record process")
+else
+    RecordGrades->GoToExamRecord: response.sendRedirect
+end

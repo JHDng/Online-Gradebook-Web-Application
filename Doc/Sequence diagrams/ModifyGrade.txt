@@ -1,0 +1,42 @@
+title Event: ModifyGrade
+
+participant Request
+participant ModifyGrade
+participant StudentDAO
+participant ExamDateDAO
+participant Student
+participant GoToRegisteredStudents
+participant Response
+
+Request->ModifyGrade: doPost(examDateID, studentID, grade)
+
+alt !isStringSafe(studentID_str)
+    ModifyGrade->Response: sendError("Invalid student id")
+end
+
+alt !isStringSafe(examDateID_str)
+    ModifyGrade->Response: sendError("Invalid examdate id")
+end
+
+alt !isStringSafe(grade_str)
+    ModifyGrade->Response: sendError("Invalid grade")
+end
+
+    alt !validGradesList.contains(grade)
+        ModifyGrade->Response: sendError("Invalid grade value")
+    end
+
+
+ModifyGrade->StudentDAO: findStudentByStudIDExamDateID(studentID, examDateID)
+StudentDAO->ModifyGrade: Student || null
+
+alt student == null
+    ModifyGrade->Response: sendError("No student found in such exam date")
+else
+    ModifyGrade->ExamDateDAO: modifyGrade(studentID, examDateID, grade)
+    alt ret == 0
+        ModifyGrade->Response: sendError("Couldn't modify grade")
+    else
+        ModifyGrade->GoToRegisteredStudents: response.sendRedirect
+    end
+end
